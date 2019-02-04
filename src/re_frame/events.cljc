@@ -61,8 +61,8 @@
           (trace/with-trace {:operation event-id
                              :op-type   kind
                              :tags      {:event event-v}}
-            (trace/merge-trace! {:tags {:app-db-before @(app-db)}})
+            (trace/merge-trace! {:tags {:app-db-before @app-db}})
             (interceptor/execute event-v interceptors)
-            (trace/merge-trace! {:tags {:app-db-after @(app-db)}})))))))
+            (trace/merge-trace! {:tags {:app-db-after @app-db}})))))))
 
 

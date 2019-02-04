@@ -46,7 +46,7 @@
   :db
   (fn db-coeffects-handler
     [coeffects]
-    (assoc coeffects :db @(app-db))))
+    (assoc coeffects :db @app-db)))
 
 
 ;; Because this interceptor is used so much, we reify it

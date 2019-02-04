@@ -986,8 +986,8 @@
   {:api-docs/heading "Miscellaneous"}
   []
   (let [handlers @registrar/kind->id->handler
-        app-db   @(db/app-db)
-        subs-cache @subs/query->reaction]
+        app-db   @db/app-db
+				subs-cache @subs/query->reaction]
     (fn []
       ;; call `dispose!` on all current subscriptions which
       ;; didn't originally exist.
@@ -1000,7 +1000,7 @@
       ;; We don't need to reset subs/query->reaction, as
       ;; disposing of the subs removes them from the cache anyway
       (reset! registrar/kind->id->handler handlers)
-      (reset! (db/app-db) app-db)
+      (reset! db/app-db app-db)
       nil)))
 
 (defn purge-event-queue
