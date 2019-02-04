@@ -186,9 +186,10 @@
             (do
               (set! queue (pop queue))
               (-add-event this event-v))
-            (do  (with-bindings #?(:clj {#'db/app-db-id (:app-db-id (meta event-v))}
-                                   :cljs {})
-                  (handle event-v))
+            (do
+              #?(:clj (with-bindings {#'db/app-db-id (:app-db-id (meta event-v))}
+                        (handle event-v))
+                 :cljs (handle event-v))
                 (set! queue (pop queue)))))
         (-call-post-event-callbacks this event-v)
         (catch #?(:cljs :default :clj Exception) ex
