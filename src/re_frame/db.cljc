@@ -2,8 +2,7 @@
   (:require [re-frame.interop :refer [ratom]])
   #?(:clj (:import [clojure.lang IAtom IDeref])))
 
-#?(:cljs (def app-db* (ratom {})))
-#?(:cljs (defn app-db [] app-db*))
+#?(:cljs (def app-db (ratom {})))
 #?(:clj
     (do
       (def ^:dynamic app-db-id nil)
@@ -37,5 +36,4 @@
       (defn clear-app-db [id]
         (swap! db-atoms* dissoc id))
 
-      (defn app-db []
-        (->ThreadLocalAtom))))
+      (def app-db (->ThreadLocalAtom))))
