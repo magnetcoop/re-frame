@@ -1,4 +1,4 @@
-(defproject re-frame "0.10.7-SNAPSHOT"
+(defproject techascent/re-frame "0.10.7-SNAPSHOT"
   :description  "A Clojurescript MVC-like Framework For Writing SPAs Using Reagent."
   :url          "https://github.com/Day8/re-frame.git"
   :license      {:name "MIT"}
@@ -17,6 +17,9 @@
                                     [lein-figwheel             "0.5.13"]
                                     [lein-shell                "0.5.0"]]}}
 
+
+  :plugins [[s3-wagon-private "1.3.1"]]
+
   :clean-targets  [:target-path "run/compiled"]
 
   :resource-paths ["run/resources"]
@@ -30,6 +33,11 @@
 
   :deploy-repositories [["releases"  {:sign-releases false :url "https://clojars.org/repo"}]
                         ["snapshots" {:sign-releases false :url "https://clojars.org/repo"}]]
+
+
+  :repositories {"releases"  {:url "s3p://techascent.jars/releases/"
+                              :no-auth true
+                              :sign-releases false}}
 
   :release-tasks [["vcs" "assert-committed"]
                   ["change" "version" "leiningen.release/bump-version" "release"]
