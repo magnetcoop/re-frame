@@ -81,7 +81,7 @@
          (if (nil? handler-fn)
            (do (trace/merge-trace! {:error true})
                (console :error (str "re-frame: no subscription handler registered for: " query-id ". Returning a nil subscription.")))
-           (cache-and-return query [] (handler-fn app-db query)))))))
+           (cache-and-return query [] (handler-fn (app-db) query)))))))
 
   ([query dynv]
    (trace/with-trace {:operation (first-in-vector query)
@@ -103,7 +103,7 @@
            (do (trace/merge-trace! {:error true})
                (console :error (str "re-frame: no subscription handler registered for: " query-id ". Returning a nil subscription.")))
            (let [dyn-vals (make-reaction (fn [] (mapv deref dynv)))
-                 sub      (make-reaction (fn [] (handler-fn app-db query @dyn-vals)))]
+                 sub      (make-reaction (fn [] (handler-fn (app-db) query @dyn-vals)))]
              ;; handler-fn returns a reaction which is then wrapped in the sub reaction
              ;; need to double deref it to get to the actual value.
              ;(console :log "Subscription created: " v dynv)
@@ -156,8 +156,8 @@
         inputs-fn      (case (count input-args)
                          ;; no `inputs` function provided - give the default
                          0 (fn
-                             ([_] app-db)
-                             ([_ _] app-db))
+                             ([_] (app-db))
+                             ([_ _] (app-db)))
 
                          ;; a single `inputs` fn
                          1 (let [f (first input-args)]
