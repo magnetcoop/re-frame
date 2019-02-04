@@ -31,10 +31,6 @@
                                       :macosx  "open"
                                       :linux   "xdg-open"}}}
 
-  :deploy-repositories [["releases"  {:sign-releases false :url "https://clojars.org/repo"}]
-                        ["snapshots" {:sign-releases false :url "https://clojars.org/repo"}]]
-
-
   :repositories {"releases"  {:url "s3p://techascent.jars/releases/"
                               :no-auth true
                               :sign-releases false}}
