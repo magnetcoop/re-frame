@@ -1,4 +1,4 @@
-(defproject techascent/re-frame "0.10.14"
+(defproject techascent/re-frame "0.10.15-SNAPSHOT"
   :description  "A Clojurescript MVC-like Framework For Writing SPAs Using Reagent."
   :url          "https://github.com/Day8/re-frame.git"
   :license      {:name "MIT"}
