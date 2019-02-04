@@ -246,8 +246,8 @@
   [event]
   (if (nil? event)
       (throw (ex-info "re-frame: you called \"dispatch\" without an event vector." {}))
-      (push event-queue (with-meta event
-                                   {:app-db-id db/app-db-id})))
+      (push event-queue #?(:clj (with-meta event {:app-db-id db/app-db-id})
+                           :cljs event)))
   nil)                                           ;; Ensure nil return. See https://github.com/Day8/re-frame/wiki/Beware-Returning-False
 
 (defn dispatch-sync
