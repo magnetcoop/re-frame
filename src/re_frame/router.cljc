@@ -100,8 +100,9 @@
   ;; -- API ------------------------------------------------------------------
 
   (push [this event]         ;; presumably called by dispatch
-    (-fsm-trigger this :add-event (with-meta event
-                                             {:app-db-id db/app-db-id})))
+    (-fsm-trigger this :add-event 
+                  #?(:cljs event
+                     :clj (with-meta event {:app-db-id db/app-db-id}))))
 
   ;; register a callback function which will be called after each event is processed
   (add-post-event-callback [_ id callback-fn]
