@@ -108,9 +108,9 @@ The better solution is, of course, to use an effectful handler. This
 is explained in detail in the previous tutorials: [Effectful Handlers](EffectfulHandlers.md) 
 and [Effects](Effects.md).  
 
-In the 2nd version, we use the alternative registration function, `reg-event-fx` , and we'll use an 
+In the 2nd version, we use the alternative registration function, `reg-event-fx`, and we'll use an 
 "Effect Handler" supplied by this library 
-[https://github.com/Day8/re-frame-http-fx](https://github.com/Day8/re-frame-http-fx).
+[https://github.com/day8/re-frame-http-fx](https://github.com/day8/re-frame-http-fx).
 You may soon feel confident enough to write your own.
  
 Here's our rewrite:
@@ -141,16 +141,3 @@ Notes:
   1. Our event handler "describes" side effects, it does not "do" side effects
   2. The event handler we wrote for `:process-response` stays as it was
   
-  
-  
-***
-
-Previous:  [Loading Initial Data](Loading-Initial-Data.md)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-Up:  [Index](README.md)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-Next:  [Subscribing to External Data](Subscribing-To-External-Data.md)  
-
-
-
-<!-- START doctoc generated TOC please keep comment here to allow auto update -->
-<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
-<!-- END doctoc generated TOC please keep comment here to allow auto update -->

@@ -1,13 +1,16 @@
 ## Bootstrapping Application State
 
 To bootstrap a re-frame application, you need to:
+
 1. register handlers:
+
    - subscription  (via `reg-sub`)
    - events (via `reg-event-db` or `reg-event-fx`)
    - effects (via `reg-fx`)
    - coeffects (via `reg-cofx`)
 2. kickstart reagent (views)
 3. Load the right initial data into `app-db` which might, for example, be a `merge` of:
+
    - Some default values
    - Values stored in LocalStorage
    - Values obtained via service calls to server
@@ -41,7 +44,7 @@ Create a function `main` which does a `reagent/render` of your root reagent comp
 
 (defn ^:export main     ;; call this to bootstrap your app
   []
-  (reagent/render [main-panel]
+  (reagent.dom/render [main-panel]
                   (js/document.getElementById "app")))
 ```
 
@@ -101,7 +104,7 @@ We'll need to dispatch an `:initialise-db` event to get it to execute. `main` se
 (defn ^:export main
   []
   (re-frame.core/dispatch [:initialise-db])   ;;  <--- this is new 
-  (reagent/render [main-panel]
+  (reagent.dom/render [main-panel]
                   (js/document.getElementById "app")))
 ```
 
@@ -154,7 +157,7 @@ quick sketch of the entire pattern. It is very straight-forward.
 (defn ^:export main     ;; call this to bootstrap your app
   []
   (re-frame.core/dispatch [:initialise-db])
-  (reagent/render [top-panel]
+  (reagent.dom/render [top-panel]
                   (js/document.getElementById "app")))
 ```
 
@@ -172,7 +175,7 @@ Your `main` might look like this:
   (re-frame.core/dispatch [:initialise-db])           ;; basics
   (re-frame.core/dispatch [:load-from-service-1])     ;; ask for data from service-1
   (re-frame.core/dispatch [:load-from-service-2])     ;; ask for data from service-2
-  (reagent.core/render [top-panel]
+  (reagent.dom/render [top-panel]
                   (js/document.getElementById "app")))
 ```
 
@@ -194,7 +197,7 @@ This assumes boolean flags are set in `app-db` when data was loaded from these s
 In simple cases, you can simplify matters by using `dispatch-sync` (instead of `dispatch`) in 
 the main function.  
 
-This technique can be seen in the [TodoMVC Example](https://github.com/Day8/re-frame/blob/master/examples/todomvc/src/todomvc/core.cljs#L49).
+This technique can be seen in the [TodoMVC Example](https://github.com/day8/re-frame/blob/master/examples/todomvc/src/todomvc/core.cljs#L49).
 
 `dispatch` queues an event for later processing, but `dispatch-sync` acts 
 like a function call and handles an event immediately. That's useful for initial data 
@@ -213,16 +216,4 @@ from a backend services.  How would we write the handler for this event?
  
 The next Tutorial will show you how.
 
-
-
-***
-
-Previous:  [Namespaced Keywords](Namespaced-Keywords.md)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-Up:  [Index](README.md)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-Next:  [Talking To Servers](Talking-To-Servers.md)  
-
- 
-<!-- START doctoc generated TOC please keep comment here to allow auto update -->
-<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
-<!-- END doctoc generated TOC please keep comment here to allow auto update -->
 

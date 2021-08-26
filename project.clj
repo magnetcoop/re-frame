@@ -1,95 +1,74 @@
-(defproject techascent/re-frame "0.10.15-SNAPSHOT"
-  :description  "A Clojurescript MVC-like Framework For Writing SPAs Using Reagent."
-  :url          "https://github.com/Day8/re-frame.git"
+(defproject techascent/re-frame "1.2.0"
   :license      {:name "MIT"}
-  :dependencies [[org.clojure/clojure        "1.8.0"]
-                 [org.clojure/clojurescript  "1.9.908"]
-                 [reagent                    "0.7.0"]
-                 [net.cgrand/macrovich       "0.2.0"]
-                 [org.clojure/tools.logging  "0.3.1"]]
+
+  :dependencies [[org.clojure/clojure       "1.10.3"   :scope "provided"]
+                 [org.clojure/clojurescript  ~(or (System/getenv "CANARY_CLOJURESCRIPT_VERSION") "1.10.866")
+                  :scope "provided"
+                  :exclusions [com.google.javascript/closure-compiler-unshaded
+                               org.clojure/google-closure-library
+                               org.clojure/google-closure-library-third-party]]
+                 [thheller/shadow-cljs      "2.14.0"   :scope "provided"]
+                 [reagent                   "1.0.0"]
+                 [net.cgrand/macrovich      "0.2.1"]
+                 [org.clojure/tools.logging "1.1.0"]]
+
+  :plugins      [[day8/lein-git-inject "0.0.14"]
+                 [lein-shadow          "0.3.1"]
+                 [s3-wagon-private "1.3.1"]]
+
+  :middleware   [leiningen.git-inject/middleware]
+
+  :git-inject {:version-pattern #"v(\d+\.\d+\.\d+.*)"}
 
   :profiles {:debug {:debug true}
-             :dev   {:dependencies [[karma-reporter            "3.0.0-alpha1"]
-                                    [binaryage/devtools        "0.9.4"]]
-                     :plugins      [[lein-ancient              "0.6.10"]
-                                    [lein-cljsbuild            "1.1.5"]
-                                    [lein-npm                  "0.6.2"]
-                                    [lein-figwheel             "0.5.13"]
-                                    [lein-shell                "0.5.0"]]}}
-
-
-  :plugins [[s3-wagon-private "1.3.1"]]
+             :dev   {:dependencies [[binaryage/devtools "1.0.3"]]
+                     :plugins      [[com.github.liquidz/antq "RELEASE"]
+                                    [lein-shell              "0.5.0"]]
+                     :antq         {}}}
 
   :clean-targets  [:target-path "run/compiled"]
 
-  :resource-paths ["run/resources"]
-  :jvm-opts       ["-Xmx1g" "-XX:+UseConcMarkSweepGC"]
+  :resource-paths ["resources"]
+  :jvm-opts       ["-Xmx1g"]
   :source-paths   ["src"]
   :test-paths     ["test"]
 
-  :shell          {:commands {"open" {:windows ["cmd" "/c" "start"]
-                                      :macosx  "open"
-                                      :linux   "xdg-open"}}}
+  :shell          {:commands {"karma" {:windows         ["cmd" "/c" "karma"]
+                                       :default-command "karma"}
+                              "open"  {:windows         ["cmd" "/c" "start"]
+                                       :macosx          "open"
+                                       :linux           "xdg-open"}}}
 
   :repositories {"releases"  {:url "s3p://techascent.jars/releases/"
                               :no-auth true
                               :sign-releases false}}
 
-  :release-tasks [["vcs" "assert-committed"]
-                  ["change" "version" "leiningen.release/bump-version" "release"]
-                  ["vcs" "commit"]
-                  ["vcs" "tag" "v" "--no-sign"]
-                  ["deploy"]
-                  ["change" "version" "leiningen.release/bump-version"]
-                  ["vcs" "commit"]
-                  ["vcs" "push"]]
+  :release-tasks [["deploy" "clojars"]]
 
-  :npm {:devDependencies [[karma                 "1.0.0"]
-                          [karma-cljs-test       "0.1.0"]
-                          [karma-chrome-launcher "2.2.0"]
-                          [karma-junit-reporter  "0.3.8"]]}
+  :shadow-cljs {:nrepl  {:port 8777}
 
-  :cljsbuild {:builds [{:id           "test"
-                        :source-paths ["test" "src"]
-                        :compiler     {:preloads        [devtools.preload]
-                                       :external-config {:devtools/config {:features-to-install [:formatters :hints]}}
-                                       :output-to     "run/compiled/browser/test.js"
-                                       :source-map    true
-                                       :output-dir    "run/compiled/browser/test"
-                                       :optimizations :none
-                                       :source-map-timestamp true
-                                       :pretty-print  true}}
-                       {:id           "karma"
-                        :source-paths ["test" "src"]
-                        :compiler     {:output-to     "run/compiled/karma/test.js"
-                                       :source-map    "run/compiled/karma/test.js.map"
-                                       :output-dir    "run/compiled/karma/test"
-                                       :optimizations :whitespace
-                                       :main          "re_frame.test_runner"
-                                       :pretty-print  true
-                                       :closure-defines {"re_frame.trace.trace_enabled_QMARK_" true}}}]}
+                :builds {:browser-test
+                         {:target           :browser-test
+                          :ns-regexp        "re-frame\\..*-test$"
+                          :test-dir         "run/compiled/browser/test"
+                          :compiler-options {:pretty-print                       true
+                                             :external-config                    {:devtools/config {:features-to-install [:formatters :hints]}}}
+                          :devtools         {:http-port 3449
+                                             :http-root "run/compiled/browser/test"
+                                             :preloads  [devtools.preload]}}
 
-  :aliases {"test-once"   ["do" "clean," "cljsbuild" "once" "test," "shell" "open" "test/test.html"]
-            "test-auto"   ["do" "clean," "cljsbuild" "auto" "test,"]
-            "karma-once"  ["do" "clean," "cljsbuild" "once" "karma,"]
-            "karma-auto"  ["do" "clean," "cljsbuild" "auto" "karma,"]
-            ;; NOTE: In order to compile docs you would need to install
-            ;; gitbook-cli(2.3.2) utility globaly using npm or yarn
-            "docs-serve" ^{:doc "Runs the development server of docs with live reloading"} ["shell" "gitbook" "serve" "./" "./build/re-frame/"]
-            "docs-build" ^{:doc "Builds the HTML version of docs"} ["shell" "gitbook" "build" "./" "./build/re-frame/"]
-            ;; NOTE: Calibre and svgexport(0.3.2) are needed to build below
-            ;; formats of docs. Install svgexpor3t using npm or yarn.
-            "docs-pdf"  ^{:doc "Builds the PDF version of docs"}
-            ["do"
-             ["shell" "mkdir" "-p" "./build/"]
-             ["shell" "gitbook" "pdf" "./" "./build/re-frame.pdf"]]
+                         :karma-test
+                         {:target           :karma
+                          :ns-regexp        "re-frame\\..*-test$"
+                          :output-to        "run/compiled/karma/test/test.js"
+                          :compiler-options {:pretty-print                       true
+                                             :closure-defines                    {re-frame.trace.trace-enabled? true}}}}}
 
-            "docs-mobi" ^{:doc "Builds the MOBI version of docs"}
-            ["do"
-             ["shell" "mkdir" "-p" "./build/"]
-             ["shell" "gitbook" "mobi" "./" "./build/re-frame.mobi"]]
+  :aliases {"watch" ["do"
+                     ["clean"]
+                     ["shadow" "watch" "browser-test" "karma-test"]]
 
-            "docs-epub" ^{:doc "Builds the EPUB version of docs"}
-            ["do"
-             ["shell" "mkdir" "-p" "./build/"]
-             ["shell" "gitbook" "epub" "./" "./build/re-frame.epub"]]})
+            "ci"    ["do"
+                     ["clean"]
+                     ["shadow" "compile" "karma-test"]
+                     ["shell" "karma" "start" "--single-run" "--reporters" "junit,dots"]]})

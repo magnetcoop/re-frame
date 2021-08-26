@@ -1,7 +1,4 @@
 
-
-## Solving The CPU Hog Problem
-
 Sometimes a handler has a lot of CPU intensive work to do, and 
 getting through it will take a while. 
 
@@ -16,15 +13,15 @@ user interactions are not being processed.
 
 How are we to show progress updates like "Hey, X% completed"?  Or 
 how can we handle the user clicking on that "Cancel" button trying 
-to stop this long running process?
+to stop this long-running process?
 
-We need a means by which long running handlers can hand control
+We need a means by which long-running handlers can hand control
 back for "other" processing every so often, while still continuing 
 on with their computation.
 
 ## The re-frame Solution
 
-__First__, all long running, CPU-hogging processes are put in event handlers.
+__First__, all long-running, CPU-hogging processes are put in event handlers.
 Not in subscriptions.  Not in components. Not hard to do,
 but worth establishing as a rule, right up front. 
 
@@ -120,7 +117,7 @@ That's just one approach. You can adapt the pattern as necessary.
 
 ### Further Notes
 
-Going to this trouble is completely unnecessary if the long running 
+Going to this trouble is completely unnecessary if the long-running 
 task involves I/O (GET, POST, HTML5 database action?) because the 
 browser will handle I/O in another thread and give UI activities plenty of look in. 
 
@@ -132,7 +129,7 @@ hogging the CPU.
 Imagine you have a process which takes, say, 5 seconds, and chunking 
 is just too much effort.
 
-You lazily decide to leave the UI unresponsive for that short period.   
+You lazily decide to leave the UI unresponsive for that short period.
 Except, 
 you aren't totally lazy.  If there was a button which kicked off 
 this 5 second process, and the user clicks it, you’d like the UI to 
@@ -156,12 +153,12 @@ You might be tempted to do this:
   :process-x
   (fn
    [db event-v]
-   (assoc db :processing-X  true)    ;; hog the CPU
-   (do-long-process-x)))    ;; update state, so reagent components render a modal 
+   (assoc db :processing-X  true) ;; update state, so reagent components render a modal 
+   (do-long-process-x)))          ;; hog the CPU
 ```
 
 But that is just plain wrong. 
-That `assoc` into `db` is not returned (and it must be for a `-db` handler).  
+That `assoc` into `db` is not returned (and it must be for a `-db` handler).
 And, even if that did somehow work, 
 then you continue hogging the thread with `do-long-process-x`.  There's no 
 chance for any UI updates because the handler never gives up control. This 
@@ -175,7 +172,7 @@ about in the Wiki, and `re-dispatch` within an`-fx` handler:
   (fn 
     [{db :db} event-v]
     {:dispatch  [:do-work-process-x]   ;; do processing later, give CPU back to browser.     
-     :db (assoc  db  :processing-X true)})) ;; ao the modal gets rendered
+     :db (assoc  db  :processing-X true)})) ;; so the modal gets rendered
 
 (re-frame.core/reg-event-db
   :do-work-process-x
@@ -196,17 +193,17 @@ seconds. That nice little Dialog telling you the button was clicked and
 action is being taken won't show.
 
 In these kinds of cases, where you are only going to give the UI 
-**one chance to update** (not a repeated chances every few milli seconds), 
+**one chance to update** (not a repeated chance every few milliseconds), 
 then you had better be sure the DOM is fully synced. 
 
-To do this, you put meta data on the event being dispatched:
+To do this, you put metadata on the event being dispatched:
 ```clj
 (re-frame.core/reg-event-fx
   :process-x
   (fn 
     [{db :db} event-v]
     {:dispatch  ^:flush-dom [:do-work-process-x]   ;; <--- NOW WITH METADATA         
-     :db (assoc  db  :processing-X true)}))  ;; ao the modal gets rendered
+     :db (assoc  db  :processing-X true)}))  ;; so the modal gets rendered
 ```
 
 Notice the `^:flush-dom` metadata on the event being dispatched.  Use 
@@ -221,9 +218,3 @@ You only need this technique when you:
 If you handle via multiple chunks you don't have to do this, because 
 you are repeatedly handing back control to the browser/UI.  Its just 
 when you are going to tie up the CPU for a one, longish chunk. 
-
-
-
-<!-- START doctoc generated TOC please keep comment here to allow auto update -->
-<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
-<!-- END doctoc generated TOC please keep comment here to allow auto update -->

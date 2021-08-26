@@ -1,12 +1,25 @@
 (ns re-frame.interceptor-test
-  (:require [cljs.test :refer-macros [is deftest testing]]
+  (:require [cljs.test :refer-macros [is deftest testing use-fixtures]]
             [reagent.ratom :refer [atom]]
-            [re-frame.interceptor :refer [context get-coeffect assoc-effect assoc-coeffect get-effect update-coeffect]]
+            [re-frame.interceptor :refer [context get-coeffect assoc-effect assoc-coeffect get-effect update-coeffect update-effect]]
             [re-frame.std-interceptors :refer [debug trim-v path enrich after on-changes
-                                               db-handler->interceptor fx-handler->interceptor]]
-            [re-frame.interceptor :as interceptor]))
+                                               db-handler->interceptor fx-handler->interceptor inject-global-interceptors]]
+            [re-frame.interceptor :as interceptor]
+            [re-frame.core :refer [reg-global-interceptor clear-global-interceptor]]))
 
 (enable-console-print!)
+
+(defn global-interceptor-fixture
+  [f]
+  (reg-global-interceptor {:id     :interceptor-test
+                           :before (fn [context]
+                                     (assoc-coeffect context :global {:direction :before}))
+                           :after  (fn [context]
+                                     (assoc-coeffect context :global {:direction :after}))})
+  (f)
+  (clear-global-interceptor :interceptor-test))
+
+(use-fixtures :once global-interceptor-fixture)
 
 (deftest test-trim-v
   (let [ctx           (context [:event-id :b :c] [])
@@ -40,7 +53,7 @@
         p  (path [:1 :2])]    ;; a two level path
 
     (let [b4 (-> (context [] [] db)
-                ((:before p))) ]          ;; before
+                ((:before p)))]          ;; before
 
       (is (= (get-coeffect b4 :db))      ;; test before
           :target)
@@ -69,11 +82,21 @@
         (nil?)                                              ;; We don't expect an effect to be added.
         (is))))
 
+
+(deftest test-inject-global-interceptors
+  (let [forward (-> (context [] [inject-global-interceptors] {:a 1})
+                    (interceptor/invoke-interceptors :before))
+        _       (is (= {:direction :before} (get-coeffect forward :global)))
+        reverse (-> forward
+                    interceptor/change-direction
+                    (interceptor/invoke-interceptors :after))]
+    (is (= {:direction :after} (get-coeffect reverse :global)))))
+
 (deftest test-db-handler-interceptor
   (let [event   [:a :b]
 
         handler (fn [db v]
-                  ;; make sure it was given the right arguements
+                  ;; make sure it was given the right arguments
                   (is (= db :original-db-val))
                   (is (= v event))
                   ;; return a specific value for later checking
@@ -89,11 +112,11 @@
 
 (deftest test-fx-handler-interceptor
   (let [event   [:a :b]
-        coeffect {:db 4 :event event}
+        coeffect {:db 4 :event event :original-event event}
         effect   {:db 5 :dispatch [:a]}
 
         handler (fn [world v]
-                  ;; make sure it was given the right arguements
+                  ;; make sure it was given the right arguments
                   (is (= world coeffect))
                   (is (= v event))
 
@@ -172,6 +195,13 @@
     (let [ctx (context [] [] {:a 1})]
       (is (= ::not-found (get-effect ctx :db ::not-found)))
       (-> ctx (:after (enrich (fn [db] (is (= db {:a 1})))))))))
+
+(deftest test-update-effect
+  (let [context {:effects {:db {:a 1}}
+                 :coeffects {:db {:a 1}}}]
+    (is (= {:effects {:db {:a 2}}
+            :coeffects {:db {:a 1}}}
+         (update-effect context :db update :a inc)))))
 
 (deftest test-update-coeffect
   (let [context {:effects {:db {:a 1}}

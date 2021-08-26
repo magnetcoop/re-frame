@@ -1,15 +1,49 @@
-### Question
+
+<!-- leave this H1 here. It stops mkdocs putting in a Title at the top.
+     It needs to be at the top of the file otherwise it breaks the 
+     table of contents on the right hand side. -->
+#
+
+## Question
 
 Does re-frame allow me to register global interceptors? Ones which are included 
 for every event handler?
 
-### Short Answer 
+## Answer (v1.0.0 onwards)
 
-No, nothing direct.
+Yes, re-frame provides an API for registering global interceptors. 
 
-### Longer Answer 
+The following code creates a global interceptor to keep a track of all events:
 
-It's easy to make happen.
+```clj
+;; We'll be recording events into this atom 
+;; The most recent events will be at the front of the list. 
+(def event-store (atom (list)))
+
+
+(defn keep-last-20
+  [existing new-one]
+  (take 20 (conj existing new-one)))
+
+
+;; this interceptor will collect events and add them to the atom above
+(def event-collector
+  (re-frame.core/->interceptor
+    :id      :event-collector
+    :before  (fn [context]
+               (swap! event-store keep-last-20 (re-frame.core/get-coeffect context :event))
+               context)))
+
+;; register this global interceptor early in program's boot process,
+;; using re-frame's API
+(re-frame.core/reg-global-interceptor event-collector)
+```
+
+
+## Answer (prior to v1.0.0) 
+
+Prior to v1.0.0, re-frame provided no API to directly support this feature,
+but there are ways of making it happen. 
 
 Let's assume you have an interceptor called `omni-ceptor` which you want
 automatically added to all your event handlers.
@@ -46,14 +80,3 @@ instead of the standard `reg-event-db`:
 ```
 
 And, hey presto, you'd have your `omni-ceptor` "globally" injected.
-
-
-***
-
-Up:  [FAQ Index](README.md)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-
-
-
-<!-- START doctoc generated TOC please keep comment here to allow auto update -->
-<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
-<!-- END doctoc generated TOC please keep comment here to allow auto update -->

@@ -12,7 +12,7 @@ they need to first know the current state of the world.
 
 `coeffects` is the current state of the world, as data, as presented to an event handler.
 
-Many event handlers only need applicaton state to do their job - that's as much of "the world"
+Many event handlers only need application state to do their job - that's as much of "the world"
 as they need to know about. To make this common case easy to program, 
 there's a specific registration function, called `reg-event-db`,
 which delivers ONLY the coeffect `db` to the event handler  (and `event` of course). 
@@ -32,7 +32,7 @@ We refer to these inputs collectively as the event handler's `coeffects`.  When 
 application state is needed, we use the registration function `reg-event-fx` and the event handler has
 a signature like this:
 ```clj
-(fn [coeffects event]     ;; first arg is often abreviated to cofx 
+(fn [coeffects event]     ;; first arg is often abbreviated to cofx 
     ... return a map of effects)
 ```
 
@@ -45,7 +45,7 @@ the world. So `coeffects` is a superset of `db`. It is a bigger world to compute
 Imagine you had an event handler which needed to "know" a value in LocalStore, in order to
 compute an event's effect. 
 
-It could be writen to access data directly from LocalStore:
+It could be written to access data directly from LocalStore:
 ```clj
 (reg-event-db
    :load-defaults
@@ -171,6 +171,7 @@ It allows you to associate a `cofx-id` (like `:now` or `:local-store`) with a
 handler function that injects the right key/value pair.
 
 The function you register will be passed two arguments:
+
   - a `:coeffects` map (to which it should add a key/value pair), and
   - optionally, the additional value supplied to `inject-cofx`
 
@@ -188,6 +189,7 @@ is how a handler could be registered for `:now`:
 ```
 
 The outcome is:
+
   1. because that cofx handler above is now registered for `:now`, I can
   2. add an Interceptor to an event handler which
   3. looks like `(inject-cofx :now)`
@@ -274,31 +276,3 @@ In note form:
   4. It will look up the registered cofx handler for that `:key` to do the injection
   5. We must have previously registered a cofx handler via `reg-cofx`
 
-
-***
-
-Previous:  [Effects](Effects.md)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-Up:  [Index](README.md)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-Next:  [Infographic](SubscriptionInfographic.md)
-
-
-
-<!-- START doctoc generated TOC please keep comment here to allow auto update -->
-<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
-<!-- ## Table Of Contents -->
-
-<!-- - [What Are They?](#what-are-they) -->
-<!-- - [An Example](#an-example) -->
-<!-- - [How We Want It](#how-we-want-it) -->
-<!-- - [Abracadabra](#abracadabra) -->
-<!-- - [Which Interceptors?](#which-interceptors) -->
-<!-- - [`inject-cofx`](#inject-cofx) -->
-<!-- - [More `inject-cofx`](#more-inject-cofx) -->
-<!-- - [Meet `reg-cofx`](#meet-reg-cofx) -->
-<!-- - [Example Of `reg-cofx`](#example-of-reg-cofx) -->
-<!-- - [Another Example Of `reg-cofx`](#another-example-of-reg-cofx) -->
-<!-- - [Secret Interceptors](#secret-interceptors) -->
-<!-- - [Testing](#testing) -->
-<!-- - [The 5 Point Summary](#the-5-point-summary) -->
-
-<!-- END doctoc generated TOC please keep comment here to allow auto update -->

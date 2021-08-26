@@ -1,4 +1,4 @@
-## Testing
+# Testing
 
 This is an introduction to testing re-frame apps. It
 walks you through some choices.
@@ -11,7 +11,7 @@ For any re-frame app, there's three things to test:
      be here because this is where most of the logic lives
 
   - **Subscription Handlers** - often not a lot to test here. Only
-    [Layer 3](SubscriptionInfographic.md) subscriptions need testing.
+    [Layer 3](subscriptions.md) subscriptions need testing.
 
   - **View functions** - I don't tend to write tests for views. There, I said it.
     Hey!  It is mean to look at someone with that level of disapproval,
@@ -30,6 +30,7 @@ in this tutorial.
 
 Let's establish some terminology to aid the further explanations in this
 tutorial.  Every unittest has 3 steps:
+
   1. **setup** initial conditions
   2. **execute** the thing-under-test
   3. **verify** that the thing-under-test did the right thing
@@ -86,7 +87,8 @@ a map literal, like this:
 This certainly works in theory, but in practice,
 unless we are careful, constructing the `db`
 value in **setup** could:
-  * be manual and time consuming
+
+  * be manual and time-consuming
   * tie tests to the internal structure of `app-db`
 
 The **setup** of every test could end up relying on the internal structure
@@ -156,11 +158,12 @@ force immediate handling of events, rather than queuing.
 ;; execute
 (dispatch-sync  [:select-triange :other :stuff])
 
-;; validate that the valuein 'app-db' is correct
+;; validate that the value in 'app-db' is correct
 ;; perhaps with subscriptions
 ```
 
 Notes:
+
   1. we use `dispatch-sync` because `dispatch` is async (event is handled not now, but soon)
   2. Not pure. We are choosing to mutate the global `app-db`. But
      having said that, there's something about this approach which is remarkably
@@ -170,7 +173,7 @@ Notes:
   4. How do we look at the results ????
 
 If this method appeals to you, you should ABSOLUTELY review the utilities in this helper library:
-[re-frame-test](https://github.com/Day8/re-frame-test).
+[re-frame-test](https://github.com/day8/re-frame-test).
 
 In summary, event handlers should be easy to test because they are pure functions. The interesting
 part is the unittest "setup" where we need to establish an initial value for `db`.
@@ -178,7 +181,7 @@ part is the unittest "setup" where we need to establish an initial value for `db
 ## Subscription Handlers
 
 Here's a Subscription Handler from
-[the todomvc example](https://github.com/Day8/re-frame/blob/master/examples/todomvc/src/todomvc/subs.cljs):
+[the todomvc example](https://github.com/day8/re-frame/blob/master/examples/todomvc/src/todomvc/subs.cljs):
 
 ```clj
 (reg-sub
@@ -267,6 +270,7 @@ But what if the View Function has a subscription?
 The use of `subscribe` makes the function impure (it obtains data from places other than its args).
 
 A testing plan might be:
+
   1. setup `app-db` with some values in the right places  (via dispatch of events?)
   2. call `my-view` (with a parameter) which will return hiccup
   3. check the hiccup structure for correctness.
@@ -297,7 +301,7 @@ to stub out `subscribe`. Like this:
 ```
 
 For more integration level testing, you can use `with-mounted-component`
-from the [reagent-template](https://github.com/reagent-project/reagent-template/blob/master/src/leiningen/new/reagent/test/cljs/reagent/core_test.cljs)
+from the [reagent-template](https://github.com/reagent-project/reagent-template/blob/master/resources/leiningen/new/reagent/test/cljs/reagent/core_test.cljs)
 to render the component in the browser and validate the generated DOM.
 
 ## View Functions - Part 2C
@@ -323,14 +327,9 @@ it is called the [Container/Component pattern](https://medium.com/@learnreact/co
 
 ## Also Read This
 
-https://juxt.pro/blog/posts/cljs-apps.html
+[https://juxt.pro/blog/posts/cljs-apps.html](https://juxt.pro/blog/posts/cljs-apps.html)
 
 ## Summary
 
 Event handlers will be your primary focus when testing. Remember to review the utilities in
-[re-frame-test](https://github.com/Day8/re-frame-test).
-
-
-<!-- START doctoc generated TOC please keep comment here to allow auto update -->
-<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
-<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+[re-frame-test](https://github.com/day8/re-frame-test).

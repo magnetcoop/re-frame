@@ -64,7 +64,7 @@
 ;; Events can have metadata which says to pause event processing.
 ;; event metadata -> "run later" functions
 (def later-fns
-  {:flush-dom (fn [f] (after-render #(next-tick f)))   ;; one tick after the end of the next annimation frame
+  {:flush-dom (fn [f] (after-render #(next-tick f)))   ;; one tick after the end of the next animation frame
    :yield     next-tick})               ;; almost immediately
 
 
@@ -73,8 +73,8 @@
 
   ;; -- API
   (push [this event])
-  (add-post-event-callback [this id callack])
-  (remove-post-event-callback [this f])
+  (add-post-event-callback [this id callback-fn])
+  (remove-post-event-callback [this id])
   (purge [this])
 
   ;; -- Implementation via a Finite State Machine
@@ -244,38 +244,15 @@
 ;;
 
 (defn dispatch
-  "Enqueue `event` for processing by event handling machinery.
-
-  `event` is a vector of length >= 1. The 1st element identifies the kind of event.
-
-  Note: the event handler is not run immediately - it is not run
-  synchronously. It will likely be run 'very soon', although it may be
-  added to the end of a FIFO queue which already contain events.
-
-  Usage:
-     (dispatch [:order-pizza {:supreme 2 :meatlovers 1 :veg 1})"
   [event]
   (if (nil? event)
       (throw (ex-info "re-frame: you called \"dispatch\" without an event vector." {}))
       (push event-queue #?(:clj (with-meta event {:app-db-id db/app-db-id})
                            :cljs event)))
-  nil)                                           ;; Ensure nil return. See https://github.com/Day8/re-frame/wiki/Beware-Returning-False
-
+  nil)                                           ;; Ensure nil return. See https://github.com/day8/re-frame/wiki/Beware-Returning-False
 
 (defn dispatch-sync
-  "Synchronously (immediately) process `event`. Do not queue.
-
-  Generally, don't use this. Instead use `dispatch`. It is an error
-  to use `dispatch-sync` within an event handler.
-
-  Useful when any delay in processing is a problem:
-     1. the `:on-change` handler of a text field where we are expecting fast typing.
-     2  when initialising your app - see 'main' in todomvc examples
-     3. in a unit test where we don't want the action 'later'
-
-  Usage:
-     (dispatch-sync [:sing :falsetto 634])"
   [event-v]
   (handle event-v)
   (-call-post-event-callbacks event-queue event-v)  ;; slightly ugly hack. Run the registered post event callbacks.
-  nil)                                              ;; Ensure nil return. See https://github.com/Day8/re-frame/wiki/Beware-Returning-False
+  nil)                                              ;; Ensure nil return. See https://github.com/day8/re-frame/wiki/Beware-Returning-False

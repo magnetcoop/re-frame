@@ -92,7 +92,6 @@ input[type="checkbox"] {
 	font-family: inherit;
 	font-weight: inherit;
 	line-height: 1.4em;
-	border: 0;
 	outline: none;
 	color: inherit;
 	padding: 6px;
@@ -316,7 +315,6 @@ html #clear-completed:active {
 	line-height: 20px;
 	text-decoration: none;
 	cursor: pointer;
-	position: relative;
 }
 
 #clear-completed:hover {

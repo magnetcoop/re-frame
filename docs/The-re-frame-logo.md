@@ -1,57 +1,51 @@
-## The re-frame Logo
 
-![logo](/images/logo/re-frame_256w.png?raw=true)
 
-### Who
+<p align="center"><img src="../images/logo/re-frame-colour.png?raw=true" alt="re-frame logo"></p>
 
-Created by the mysterious, deep thinker, known only as @martinklepsch.
+#
+## Who?
 
-Some say he appears on high value stamps in Germany and that he once <br>
-punched a horse to the ground. Others say he loves recursion so much that, <br>
-in his wallet, he carries a photograph of his wallet.
+It was created by a mysterious, deep thinker, known only as @martinklepsch.
 
-All we know for sure is that he wields [Sketch.app](https://www.sketchapp.com/) like Bruce Lee <br>
-wielded nunchucks.
+Some say he appears on high-value stamps in Germany and that he once 
+knocked a horse unconscious with a single punch. Others say he loves recursion 
+so much that, in his wallet, he carries a photograph of his wallet.
 
-### Genesis Theories
+All we know for sure is that he wields pixels like Bruce Lee wielded
+nunchucks.
 
-Great, unexplained works encourage fan theories, and the re-frame <br>
+## Genesis Theories
+
+Great, unexplained works encourage fan theories, and the re-frame 
 logo is no exception.
 
-One noisy group insists that @martinklepsch's design is assertively <br>
-trying to `Put the 'f' back into infinity`. They have t-shirts. 
+One noisy group insist that @martinklepsch's design is assertively
+putting the 'f' back into infinity, in a sicking-it-to-the-man kinda way.
+They have t-shirts, `f u ∞`, and angry certainty. 
 
-Another group speculates that he created the logo as a bifarious  <br>
-rainbow homage to Frank Lloyd Wright's masterpiece, the Guggenheim <br>
-Museum. Which is surely a classic case of premature abstraction  <br>
-and over engineering. Their theory, not the Guggenheim.
+Another group speculates that he created the logo as a bifarious rainbow
+homage to Frank Lloyd Wright's architectural masterpiece, the Guggenheim
+Museum. Which is surely a classic case of premature abstraction and
+over-engineering. Their theory, not the Guggenheim. They sometimes
+indent by 5 spaces - because "art" - and need ultrawide monitors
+for yaml.
 
-![](/images/logo/Guggenheim.jpg)
+![](images/logo/Guggenheim.jpg)
 
-The infamous "Bad Touch" faction look at the logo and see the cljs <br>
-logo mating noisily with re-frame's official architecture diagram. <br>
-Yes, its true, their parties are completely awesome, but you will <br>
-need someone to bail you out of jail later.
+Then there's the infamous "Bad Touch" faction. So embarrassing. For them,
+the logo shows the ClojureScript logo mating noisily with re-frame's
+official architecture diagram. Colour-wise, I guess. Their parties are
+completely awesome, but you might need someone to bail you out of
+jail later. 
 
-![](/images/logo/Genesis.png)
+![](images/logo/Genesis.png)
 
-For the Functional Fundamentalists, a stern bunch, the logo is a <br>
-flowing poststructuralist rebuttal of OO's vowel duplication and <br>
-horizontal adjacency. Their alternative approach, FF, is fine, apparently, <br>
-because "everyone loves a fricative".
+For the Functional Fundamentalists, an earnest bunch with post-Maharishi-Beatles
+hair, the logo is a flowing poststructuralist rebuttal of OO's vowel duplication
+and horizontal adjacency. Their alternative abbreviation, FF, is fine, apparently,
+because "hey, come on man, everyone loves a fricative".  
 
-For his part, @martinklepsch has never confirmed any theory, teasing <br>
-us instead with coded clues like "Will you please stop emailing me" <br>
+For his part, @martinklepsch has never confirmed any theory, teasing 
+us instead with coded clues like "Will you please stop emailing me"
 and "Why did you say I hit a horse?".
-
-### Assets Where?
-
-Within this repo, look in `/images/logo/`
-
-
-<!-- START doctoc generated TOC please keep comment here to allow auto update -->
-<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
-<!-- END doctoc generated TOC please keep comment here to allow auto update -->
-
-
 

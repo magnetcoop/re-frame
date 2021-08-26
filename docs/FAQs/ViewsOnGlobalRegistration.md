@@ -1,9 +1,14 @@
 
-### Question
+<!-- leave this H1 here. It stops mkdocs putting in a Title at the top.
+     It needs to be at the top of the file otherwise it breaks the 
+     table of contents on the right hand side. -->
+#
+
+## Question
 
 I feel offended by re-frame's `reg-*` API.  How is it functional to side effect globally? 
 
-### Background
+## Background
 
 A re-frame app is defined collectively by its handlers. As an app boots, calls to registration 
 functions like `reg-event-db` and `reg-sub`
@@ -15,7 +20,7 @@ Each registration adds a new entry to this `registrar`.
 
 How should we analyse this from a functional point of view?
 
-### Answer 
+## Answer 
 
 There are three ways to view this:
 
@@ -37,7 +42,7 @@ There are three ways to view this:
      within a map-ish structure (a `registrar`), once, on program load.
      So, if you feel uncomfortable with what re-frame does, you should also feel uncomfortable about using `defn`.
      Also, it would be useful to understand 
-     [how you are creating a virtual machine when you program re-frame](https://github.com/Day8/re-frame/blob/master/docs/MentalModelOmnibus.md#on-dsls-and-machines)   
+     [how you are creating a virtual machine when you program re-frame](https://github.com/day8/re-frame/blob/master/docs/MentalModelOmnibus.md#on-dsls-and-machines)   
 
 
 While Point 3 is an interesting perspective to consider, the real discussion should probably be around points 1 and 2: is it a good idea for re-frame to tradeoff purity for simplicity?  You can't really judge this
@@ -45,15 +50,3 @@ properly until you have used it and experienced the simplicity, and/or found pai
 Many people experience few problems and live happily ever after. For others, the conceptual
 distaste is insurmountable and nagging. Like it or hate it, please realise it was a deliberate 
 and conscious design decision, not some oversight.
-
--------- 
-
-Up:  [FAQ Index](README.md)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-
-
-<!-- START doctoc generated TOC please keep comment here to allow auto update -->
-<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
-<!-- END doctoc generated TOC please keep comment here to allow auto update -->
-​
-
--- 

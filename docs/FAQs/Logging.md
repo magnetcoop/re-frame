@@ -1,8 +1,14 @@
-### Question
+
+<!-- leave this H1 here. It stops mkdocs putting in a Title at the top.
+     It needs to be at the top of the file otherwise it breaks the 
+     table of contents on the right hand side. -->
+#
+
+## Question
 
 I use logging method X, how can I make re-frame use my method? 
 
-### Answer
+## Answer
 
 re-frame makes use of the logging functions: `warn`, `log`, `error`, `group` and `groupEnd`.  
 
@@ -22,12 +28,3 @@ override that by providing your own set or subset of these functions using
                               :log   my-log 
                               ...})
 ```
-
-***
-
-Up:  [FAQ Index](README.md)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-
-
-<!-- START doctoc generated TOC please keep comment here to allow auto update -->
-<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
-<!-- END doctoc generated TOC please keep comment here to allow auto update -->
