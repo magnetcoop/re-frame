@@ -1,0 +1,14 @@
+language: clojure
+lein: 2.9.0
+dist: xenial
+jdk:
+  -openjdk8
+deploy:
+  provider: script
+  skip_cleanup: true
+  script: lein deploy
+  on:
+    tags: true
+cache:
+  directories:
+    - $HOME/.m2
