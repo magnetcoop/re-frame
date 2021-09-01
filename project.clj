@@ -1,4 +1,4 @@
-(defproject magnetcoop/re-frame "1.3.0"
+(defproject coop.magnet/re-frame "1.3.1"
   :license      {:name "MIT"}
   :description "A fork of techascent/re-frame (which forks day8/re-frame) to deliver SSR capabilities while PR#738 is pending."
   :url          "https://github.com/magnetcoop/re-frame.git"
