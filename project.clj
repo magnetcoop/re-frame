@@ -1,6 +1,7 @@
-(defproject techascent/re-frame "1.2.0"
+(defproject magnetcoop/re-frame "1.3.0"
   :license      {:name "MIT"}
-
+  :description "A fork of techascent/re-frame (which forks day8/re-frame) to deliver SSR capabilities while PR#738 is pending."
+  :url          "https://github.com/magnetcoop/re-frame.git"
   :dependencies [[org.clojure/clojure       "1.10.3"   :scope "provided"]
                  [org.clojure/clojurescript  ~(or (System/getenv "CANARY_CLOJURESCRIPT_VERSION") "1.10.866")
                   :scope "provided"
@@ -13,8 +14,7 @@
                  [org.clojure/tools.logging "1.1.0"]]
 
   :plugins      [[day8/lein-git-inject "0.0.14"]
-                 [lein-shadow          "0.3.1"]
-                 [s3-wagon-private "1.3.1"]]
+                 [lein-shadow          "0.3.1"]]
 
   :middleware   [leiningen.git-inject/middleware]
 
@@ -26,7 +26,10 @@
                                     [lein-shell              "0.5.0"]]
                      :antq         {}}}
 
-  :clean-targets  [:target-path "run/compiled"]
+  :clean-targets  [:target-path
+                   "shadow-cljs.edn"
+                   "node_modules"
+                   "run/compiled"]
 
   :resource-paths ["resources"]
   :jvm-opts       ["-Xmx1g"]
@@ -39,9 +42,14 @@
                                        :macosx          "open"
                                        :linux           "xdg-open"}}}
 
-  :repositories {"releases"  {:url "s3p://techascent.jars/releases/"
-                              :no-auth true
-                              :sign-releases false}}
+  :deploy-repositories [["snapshots" {:url "https://clojars.org/repo"
+                                      :username :env/clojars_username
+                                      :password :env/clojars_password
+                                      :sign-releases false}]
+                        ["releases"  {:url "https://clojars.org/repo"
+                                      :username :env/clojars_username
+                                      :password :env/clojars_password
+                                      :sign-releases false}]]
 
   :release-tasks [["deploy" "clojars"]]
 
